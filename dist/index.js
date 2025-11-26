@@ -21,6 +21,15 @@ app.post("/login", (req, res) => {
     const token = jwt.sign({ id: user.id, role: user.role }, SECRET, {
         expiresIn: "1h",
     });
+    const ip = req.headers["x-forwarded-for"] || req.socket.remoteAddress || "unknown";
+    const time = new Date().toISOString();
+    const role = user.role;
+    console.log(`🔐 Nouvelle connexion :
+  ➤ IP : ${ip}
+  ➤ Heure : ${time}
+  ➤ Utilisateur : ${username}
+  ➤ Rôle : ${role}
+    `);
     res.json({ token, role: user.role });
 });
 // Vérifier le token (middleware)
